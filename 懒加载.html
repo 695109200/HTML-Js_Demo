@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LozyLoad</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+        }
+        .images {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            width: 500px;
+        }
+
+        .img-item {
+            height: 600px;
+            width: 400px;
+            margin: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="images">
+        <img class="img-item" alt="loading" data-src="http://a0.att.hudong.com/78/52/01200000123847134434529793168.jpg">
+        <img class="img-item" alt="loading" data-src="http://a3.att.hudong.com/68/61/300000839764127060614318218_950.jpg">
+        <img class="img-item" alt="loading" data-src="http://a3.att.hudong.com/14/75/01300000164186121366756803686.jpg">
+        <img class="img-item" alt="loading" data-src="http://a2.att.hudong.com/36/48/19300001357258133412489354717.jpg">
+        <img class="img-item" alt="loading" data-src="http://a4.att.hudong.com/21/09/01200000026352136359091694357.jpg">
+    </div>
+    
+    <script type="text/javascript">
+        // 获取DOM
+        var imgs = document.querySelectorAll('img');
+        var lazyload = function () {
+            // document.body.scrollTop 获取被卷去的高度,就是滚轮往下滑，页面被卷上去那部分
+            // 第二个documentElement为HTML被卷去的高度，防止兼容问题
+            var scrollTop = document.body.scrollTop || document.documentElement.scrollTop
+            // 获取显示区的高度
+            var winTop = window.innerHeight
+            for (var i = 0; i < imgs.length; i++) {
+                // 如果img到顶部的长度 小于或者等于 被卷曲高度+显示区高度
+                if (imgs[i].offsetTop <= scrollTop + winTop) {
+                    //这张图片的src等于图片data-src的值
+                    // imgs[i].getAttribute('data-src') 获取Img标签上的data-src属性的值
+                    imgs[i].src = imgs[i].getAttribute('data-src')
+                }
+            }
+        }
+        // 创建计时
+        function throttle(method, delay) {
+            let timer = null
+            return function () {
+                // arguments对象存储的是传递给函数的参数
+                let args = arguments
+                // 阻止计时执行
+                // clearTimeout(timer)
+                timer = setTimeout(function () {
+                    method.apply(this.args)
+                }, delay)
+            }
+        }
+        lazyload()
+        // 滚动事件添加计时器
+        window.onscroll = throttle(lazyload, 200)
+    </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+</head>
+
+<body>
+    <div id="root">
+        <p>{{name}}</p>
+        <p>{{message}}</p>
+    </div>
+    <script>
+        let r = /\{\{(.+?)\}\}/g
+        let app = new TheVue({
+            el:'#root',
+            data:{
+                name:'xxx',
+                message:'ccc'
+            }
+        });
+        function TheVue( option ){
+            //先获取传过来option中的data和节点
+            this._data = option.data;
+            this._el = option.el;
+            //生成虚拟模板
+            this._tempDom = document.querySelector(this._el)
+            //进行渲染
+            this.render()
+        }
+        //通过prototype方法给TheVue对象添加渲染方法
+        TheVue.prototype.render = function () {
+            this.compiler()
+        }
+        //通过prototype方法给TheVue对象添加编译方法
+        TheVue.prototype.compiler = function (tempNode) {
+            let realHTMLDOM = this.tempNode.cloneNode(true);
+            compiler( realHTMLDOM )
+            this.updata( realHTMLDOM )
+        }
+        //通过prototype方法给TheVue对象添加方法
+        TheVue.prototype.updata = function (tempNode) {
+            this._parent.replaceChild( real ,document.querySelector('#root'))
+        }
+        function compiler(template, data) {
+            let childNodes = template.childNodes;
+            //循环DOM节点的childNodes数组，判断数组中nodeType = 3 的 节点
+            //nodeType = 1 为元素 , 3为文本 
+            for (let i = 0; i < childNodes.length; i++) {
+                let type = childNodes[i].nodeType
+                if (type === 3) {                        //如果是文本节点,用正则判断是否有{{}}
+                    let txt = childNodes[i].nodeValue
+                    //把正则后的值赋给txt
+                    //replace方法的回调函数function(a,b,c,d) 
+                    //a为匹配到的字符串，b为对应替换的字符串，c为替换的位置，d为整个要替换的字符串 
+                    txt = txt.replace( r,( a , b ) => {    
+                        let key = b.trim();               //trim()方法用于删除字符串的头尾空格
+                        let value = data[ key ]           //获取传进来data中等于key的值,
+                        return value
+                    });
+                    childNodes[i].nodeValue = txt
+                } else if (type === 1) {                 //如果是元素则继续判断有没有子元素,进行递归
+                    compiler(childNodes[i], data)
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

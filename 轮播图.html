@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        *{
+            margin: 0;padding: 0;
+            user-select: none;
+        }
+        ul{
+            list-style: none;
+        }
+        a{
+            text-decoration: none;
+        }
+        .container{
+            position: relative;
+            width: 800px;
+            height: 400px;
+            box-shadow: 0 0 5px black;
+            overflow: hidden;
+        }
+        .wrap{
+            position: absolute;
+            width: 4800px;
+            z-index: 1;
+            transition: .3s
+        }
+        img{
+            float: left;
+            width: 800px;
+            height: 400px;
+        }
+        .buttons{
+            position: absolute;
+            left: 50%;
+            width: 200px;
+            bottom:10px;
+            height:30px;
+            z-index: 2;
+            line-height: 30px;
+            display: flex;
+            text-align: center;
+            margin-left: -100px;
+            justify-content:space-between
+        }
+        li{
+            color: aliceblue;
+            width: 30px;
+            height: 30px;
+            float: left;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+        }
+        .arrow{
+            position: absolute;
+            top: 50%;
+            margin-top: -50px;
+            line-height: 100px;
+            text-align: center;
+            color: #fff;
+            font-size: 50px;
+            z-index: 3;
+            width: 50px;
+            height: 100px;
+            background-color:rgba(0, 0, 0, 0.1);
+            transition: all .3s;
+        }
+        .right{
+            right: 0;
+        }
+        .arrow:hover{
+            background-color:rgba(0, 0, 0, 0.6);
+        }
+        .on{
+            background-color: rgba(230, 223, 223, 0.4);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" onmouseover="clearInterval(timer)" onmouseout="autoPlay()">
+        <div class="wrap" style="left:-800px">
+                <img class="img" src="http://img0.imgtn.bdimg.com/it/u=3386247472,87720242&fm=26&gp=0.jpg" alt="">
+                <img class="img" src="http://img3.imgtn.bdimg.com/it/u=2534506313,1688529724&fm=26&gp=0.jpg" alt="">
+                <img class="img" src="http://a0.att.hudong.com/78/52/01200000123847134434529793168.jpg" alt="">
+                <img class="img" src="http://img3.imgtn.bdimg.com/it/u=1208538952,1443328523&fm=26&gp=0.jpg" alt="">
+        </div>
+        <ul class="buttons">
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+        </ul>
+        <a href="javascript:;" class="left arrow">&lt;</a>
+        <a href="javascript:;" class="right arrow">&gt;</a>
+    </div>
+    <script>
+        var wrap = document.querySelector(".wrap");
+        var next = document.querySelector(".right");
+        var prev = document.querySelector(".left");
+        var dots = document.getElementsByTagName("li");
+        var index = 0;
+        var timer = null;
+        //给li标签添加点击事件，判断是第几个标签进行移动wrap
+        for (var i = 0, len = dots.length; i < len; i++){
+            (function(i){
+                dots[i].onclick = function () {
+                    switch(i){
+                        case 0:
+                            wrap.style.left = "-800px",
+                            index = 0;
+                            showCurrentDot();
+                            break;
+                        case 1:
+                            wrap.style.left = "-"+2*800+"px",
+                            index = 1;
+                            showCurrentDot();
+                            break;
+                        case 2:
+                            wrap.style.left ="-"+3*800+"px",
+                            index = 2;
+                            showCurrentDot();
+                            break;
+                        case 3:
+                            wrap.style.left = "0px",
+                            index = 3;
+                            showCurrentDot();
+                            break;
+                    }
+                }
+            })(i);            
+        }
+        //点击下一张判断是否最后一张，是就移动到第一张，否则-800px移动
+        next.onclick = function () {
+            var newLeft = wrap.style.left === "-2400px" ? 0 : parseInt(wrap.style.left)-800
+            wrap.style.left = newLeft + "px";
+            //下方标签index +1 ，判断是否最后一个标签
+            index++;
+            if(index > 3){
+                index = 0;
+            }
+            showCurrentDot();
+        }
+        //同上
+        prev.onclick = function () {
+            var newLeft = wrap.style.left === "0px" ? -2400 : parseInt(wrap.style.left)+800
+            wrap.style.left = newLeft + "px";
+            index--;
+            if(index < 0){
+                index = 3;
+            }
+            showCurrentDot();
+        }
+        //每2秒执行一次
+        function autoPlay () {
+            timer = setInterval(function () {
+                next.onclick()
+            },2000);
+        }
+        //改变下方标签
+        function showCurrentDot () {
+            for(var i = 0, len = dots.length; i < len; i++){
+                dots[i].className = "";
+            }
+            dots[index].className = "on";
+        }
+        autoPlay();
+    </script>
+</body>
+
+</html>

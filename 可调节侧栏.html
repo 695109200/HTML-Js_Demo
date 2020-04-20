@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            display: flex;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .scalable {
+            position: relative;
+        }
+
+        .scalable .content {
+            padding-right: 34px;
+        }
+
+        .main {
+            flex: 1;
+            /* 填充剩下的 */
+        }
+
+        .log {
+            width: 80%;
+            height: 200px;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .sep {
+            position: absolute;
+            top: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 14px;
+            height: 100%;
+            background-color: #eee;
+            cursor: col-resize;
+            box-shadow: 0 0 2px rgba(0, 0, 0, 0.35)
+        }
+
+        .sep i {
+            display: inline-block;
+            height: 14px;
+            width: 1px;
+            background-color: black;
+            margin: 0 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="scalable">
+        <div class="content">
+            <div class="log">左边调节栏</div>
+            <div class="sep">
+                <i></i>
+                <i></i>
+            </div>
+        </div>
+    </div>
+    <div class="main">
+        <div class="content">
+            右边可调节栏
+        </div>
+    </div>
+    <script>
+        var startX,startWidth
+        document.querySelector('.sep').addEventListener('mousedown',start)
+
+        function start(e){
+            //e.clientX鼠标相对于浏览器窗口可视区域的X坐标，screenX相对于浏览器屏幕
+            startX = e.clientX
+
+            //getComputedStyle 返回的对象是 CSS类型的对象。取数据的时候可以直接按照属性的取法去取数据
+            //这里返回的width是 带有px的，用parseInt()只获取数字部分
+            startWidth =parseInt(window.getComputedStyle(document.querySelector('.scalable')).width,10)
+            
+            //document.documentElement绑定到HTML去
+            document.documentElement.addEventListener('mousemove',move)
+            document.documentElement.addEventListener('mouseup',stop)
+        }
+
+        function move(e){
+            //左边宽度 = 左边原始宽度 + 鼠标移动的坐标 - 鼠标一开始点下的坐标 
+            //(鼠标移动的坐标 - 鼠标一开始点下的坐标)这一部分相对于移动的距离
+            let newWidth = startWidth+e.clientX-startX
+            document.querySelector('.scalable').style.width = newWidth+'px'
+        }
+        function stop(e){
+            //鼠标按起 取消绑定
+            document.documentElement.removeEventListener('mousemove',move)
+            document.documentElement.removeEventListener('mouseup',stop)
+        }
+    </script>
+</body>
+
+</html>

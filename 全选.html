@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="panel">
+        <div class="content">
+            <input type="checkbox">A<br>
+            <input type="checkbox">A<br>
+            <input type="checkbox">A<br>
+            <input type="checkbox">A<br>
+            <input type="checkbox">A<br>
+            <input type="checkbox">A<br>
+            <input type="checkbox">A<br>
+            <input type="checkbox">A<br>
+        </div>
+        <div class="foo">
+            <button id="all">全选</button>
+            <button id="allRemove">全部取消选中</button>
+            <button id="revers">反选</button>
+        </div>
+    </div>
+    <script>
+        function $(id) {
+            return typeof id === 'string' ? document.getElementById(id) : null
+        }
+        var inputs = document.getElementsByTagName('input')
+        $('all').onclick = function () {
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].checked = true
+            }
+        }
+        $('allRemove').onclick = function () {
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].checked = false
+            }
+        }
+        $('revers').onclick = function () {
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].checked = !inputs[i].checked
+            }
+        }
+    </script>
+</body>
+
+</html>
